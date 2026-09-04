@@ -1,0 +1,229 @@
+{% extends "reserva/base.html" %}
+
+{% block title %}Calendario de reservas | Estudio de tatuajes{% endblock %}
+{% block description %}Consulta la disponibilidad de la semana actual para reservar tu cita.{% endblock %}
+
+{% block styles %}
+{{ block.super }}
+<style>
+	.calendar-page {
+		max-width: 1100px;
+		margin: 0 auto;
+		padding: 2rem 1rem;
+	}
+
+	.calendar-heading {
+		display: flex;
+		justify-content: space-between;
+		align-items: end;
+		gap: 1rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.calendar-heading h1 {
+		margin: 0;
+	}
+
+	.calendar-heading p {
+		margin: 0.4rem 0 0;
+	}
+
+	.calendar-legend {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+		margin: 0 0 1rem;
+		padding: 0;
+		list-style: none;
+	}
+
+	.legend-item {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.45rem;
+	}
+
+	.legend-color {
+		width: 0.8rem;
+		height: 0.8rem;
+		border-radius: 50%;
+		background: #d9f2df;
+	}
+
+	.legend-color--busy {
+		background: #f4c2c2;
+	}
+
+	.calendar-scroll {
+		overflow-x: auto;
+	}
+
+	.calendar {
+		display: grid;
+		grid-template-columns: 5.5rem repeat(5, minmax(9rem, 1fr));
+		min-width: 52rem;
+		border-top: 1px solid #d8d8d8;
+		border-left: 1px solid #d8d8d8;
+	}
+
+	.calendar-cell {
+		min-height: 4.5rem;
+		padding: 0.7rem;
+		border-right: 1px solid #d8d8d8;
+		border-bottom: 1px solid #d8d8d8;
+		background: #fff;
+	}
+
+	.calendar-cell--header {
+		min-height: auto;
+		background: #f5f5f5;
+		font-weight: 700;
+		text-align: center;
+	}
+
+	.calendar-cell--time {
+		display: flex;
+		align-items: flex-start;
+		justify-content: center;
+		color: #555;
+		font-size: 0.9rem;
+	}
+
+	.calendar-cell--available {
+		background: #f1fbf3;
+	}
+
+	.calendar-cell--busy {
+		background: #fff0f0;
+		color: #8a1f1f;
+	}
+
+	.calendar-status {
+		display: block;
+		font-size: 0.9rem;
+		font-weight: 600;
+	}
+
+	@media (max-width: 640px) {
+		.calendar-heading {
+			display: block;
+		}
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="calendar-page" aria-labelledby="calendar-title">
+	<div class="calendar-heading">
+		<div>
+			<h1 id="calendar-title">Calendario de reservas</h1>
+			<p id="week-range">Disponibilidad de la semana actual</p>
+		</div>
+		<a href="{% url 'formulario_reserva' %}">Solicitar una reserva</a>
+	</div>
+
+	<ul class="calendar-legend" aria-label="Leyenda del calendario">
+		<li class="legend-item"><span class="legend-color" aria-hidden="true"></span>Disponible</li>
+		<li class="legend-item"><span class="legend-color legend-color--busy" aria-hidden="true"></span>Ocupado</li>
+	</ul>
+
+	<div class="calendar-scroll">
+		<div class="calendar" role="grid" aria-label="Disponibilidad semanal">
+			<div class="calendar-cell calendar-cell--header" role="columnheader">Hora</div>
+			<div class="calendar-cell calendar-cell--header" role="columnheader" data-day="1">Lunes</div>
+			<div class="calendar-cell calendar-cell--header" role="columnheader" data-day="2">Martes</div>
+			<div class="calendar-cell calendar-cell--header" role="columnheader" data-day="3">Miércoles</div>
+			<div class="calendar-cell calendar-cell--header" role="columnheader" data-day="4">Jueves</div>
+			<div class="calendar-cell calendar-cell--header" role="columnheader" data-day="5">Viernes</div>
+
+			<div class="calendar-cell calendar-cell--time" role="rowheader">09:00</div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--busy" role="gridcell" aria-label="Martes a las 09:00, ocupado"><span class="calendar-status">Ocupado</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--busy" role="gridcell" aria-label="Viernes a las 09:00, ocupado"><span class="calendar-status">Ocupado</span></div>
+
+			<div class="calendar-cell calendar-cell--time" role="rowheader">10:00</div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--busy" role="gridcell" aria-label="Miércoles a las 10:00, ocupado"><span class="calendar-status">Ocupado</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+
+			<div class="calendar-cell calendar-cell--time" role="rowheader">11:00</div>
+			<div class="calendar-cell calendar-cell--busy" role="gridcell" aria-label="Lunes a las 11:00, ocupado"><span class="calendar-status">Ocupado</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--busy" role="gridcell" aria-label="Jueves a las 11:00, ocupado"><span class="calendar-status">Ocupado</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+
+			<div class="calendar-cell calendar-cell--time" role="rowheader">12:00</div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--busy" role="gridcell" aria-label="Martes a las 12:00, ocupado"><span class="calendar-status">Ocupado</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+
+			<div class="calendar-cell calendar-cell--time" role="rowheader">13:00</div>
+			<div class="calendar-cell calendar-cell--busy" role="gridcell" aria-label="Lunes a las 13:00, ocupado"><span class="calendar-status">Ocupado</span></div>
+			<div class="calendar-cell calendar-cell--busy" role="gridcell" aria-label="Martes a las 13:00, ocupado"><span class="calendar-status">Ocupado</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--busy" role="gridcell" aria-label="Viernes a las 13:00, ocupado"><span class="calendar-status">Ocupado</span></div>
+
+			<div class="calendar-cell calendar-cell--time" role="rowheader">14:00</div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--busy" role="gridcell" aria-label="Miércoles a las 14:00, ocupado"><span class="calendar-status">Ocupado</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+
+			<div class="calendar-cell calendar-cell--time" role="rowheader">15:00</div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--busy" role="gridcell" aria-label="Martes a las 15:00, ocupado"><span class="calendar-status">Ocupado</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--busy" role="gridcell" aria-label="Jueves a las 15:00, ocupado"><span class="calendar-status">Ocupado</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+
+			<div class="calendar-cell calendar-cell--time" role="rowheader">16:00</div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--busy" role="gridcell" aria-label="Miércoles a las 16:00, ocupado"><span class="calendar-status">Ocupado</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+
+			<div class="calendar-cell calendar-cell--time" role="rowheader">17:00</div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+			<div class="calendar-cell calendar-cell--busy" role="gridcell" aria-label="Jueves a las 17:00, ocupado"><span class="calendar-status">Ocupado</span></div>
+			<div class="calendar-cell calendar-cell--available" role="gridcell"><span class="calendar-status">Disponible</span></div>
+		</div>
+	</div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+	const today = new Date();
+	const monday = new Date(today);
+	const day = today.getDay() || 7;
+	monday.setDate(today.getDate() - day + 1);
+
+	const formatDate = (date) => new Intl.DateTimeFormat('es-ES', {
+		day: 'numeric',
+		month: 'long'
+	}).format(date);
+
+	const friday = new Date(monday);
+	friday.setDate(monday.getDate() + 4);
+	document.querySelector('#week-range').textContent =
+		`${formatDate(monday)} al ${formatDate(friday)}`;
+
+	document.querySelectorAll('[data-day]').forEach((header) => {
+		const date = new Date(monday);
+		date.setDate(monday.getDate() + Number(header.dataset.day) - 1);
+		header.insertAdjacentHTML('beforeend', `<br><small>${date.getDate()}</small>`);
+	});
+</script>
+{% endblock %}
