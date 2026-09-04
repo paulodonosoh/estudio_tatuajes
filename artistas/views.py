@@ -24,7 +24,7 @@ def artistas(request):
             'url': 'noah',
         },
     ]
-    return render(request, 'artistas/artistas.html', {'artistas': artistas})
+    return render(request, 'artistas/home_artistas.html', {'artistas': artistas})
 
 def israel(request):
     return render(request, 'artistas/israel.html', {

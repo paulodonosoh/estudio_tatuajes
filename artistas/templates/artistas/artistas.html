@@ -1,10 +1,10 @@
-{% extends "core/base.html" %}
-
-{% block title %}Artistas | Estudio de tatuajes{% endblock %}
-
-{% block styles %}
-{{ block.super }}
-<style>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{% block title %}Artistas | Estudio de tatuajes{% endblock %}</title>
+	<style>
 	.artista {
 		max-width: 960px;
 		margin: 0 auto;
@@ -62,45 +62,58 @@
 		}
 	}
 </style>
-{% endblock %}
+</head>
+<body>
+	<header>
+		<nav aria-label="Navegación de artistas">
+			<a href="{% url 'artistas' %}">Todos los artistas</a>
+			<a href="{% url 'home' %}">Inicio</a>
+		</nav>
+	</header>
 
-{% block content %}
-<section class="artista">
-	{% block artista_contenido %}
-	<section class="artista__encabezado">
-		<img class="artista__imagen" src="{{ imagen }}" alt="{{ nombre }}, tatuador del estudio">
-		<div>
-			<p>Artista tatuador</p>
-			<h1 class="artista__nombre">{{ nombre }}</h1>
-		</div>
-	</section>
+	<main>
+		<section class="artista">
+			{% block artista_contenido %}
+			<section class="artista__encabezado">
+				<img class="artista__imagen" src="{{ imagen }}" alt="{{ nombre }}, tatuador del estudio">
+				<div>
+					<p>Artista tatuador</p>
+					<h1 class="artista__nombre">{{ nombre }}</h1>
+				</div>
+			</section>
 
-	<section class="artista__datos" aria-label="Información de {{ nombre }}">
-		<article class="artista__dato">
-			<h2>Estilos</h2>
-			<p>{{ estilos|join:", " }}</p>
-		</article>
+			<section class="artista__datos" aria-label="Información de {{ nombre }}">
+				<article class="artista__dato">
+					<h2>Estilos</h2>
+					<p>{{ estilos|join:", " }}</p>
+				</article>
 
-		<article class="artista__dato">
-			<h2>Contacto</h2>
-			<p>{{ contacto }}</p>
-		</article>
+				<article class="artista__dato">
+					<h2>Contacto</h2>
+					<p>{{ contacto }}</p>
+				</article>
 
-		<article class="artista__dato artista__dato--amplio">
-			<h2>Sobre {{ nombre }}</h2>
-			<p>{{ descripcion }}</p>
-		</article>
+				<article class="artista__dato artista__dato--amplio">
+					<h2>Sobre {{ nombre }}</h2>
+					<p>{{ descripcion }}</p>
+				</article>
 
-		<article class="artista__dato">
-			<h2>Días disponibles</h2>
-			<p>{{ dias }}</p>
-		</article>
+				<article class="artista__dato">
+					<h2>Días disponibles</h2>
+					<p>{{ dias }}</p>
+				</article>
 
-		<article class="artista__dato">
-			<h2>Horarios</h2>
-			<p>{{ horarios }}</p>
-		</article>
-	</section>
-	{% endblock %}
-</section>
-{% endblock %}
+				<article class="artista__dato">
+					<h2>Horarios</h2>
+					<p>{{ horarios }}</p>
+				</article>
+			</section>
+			{% endblock %}
+		</section>
+	</main>
+
+	<footer>
+		<p>&copy; {% now "Y" %} Estudio de tatuajes</p>
+	</footer>
+</body>
+</html>
