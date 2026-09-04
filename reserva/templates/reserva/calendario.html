@@ -1,0 +1,150 @@
+{% extends "reserva/base.html" %}
+
+{% block title %}Calendario de reservas | Estudio de tatuajes{% endblock %}
+{% block description %}Consulta la disponibilidad de la semana actual para reservar tu cita.{% endblock %}
+
+{% block styles %}
+{{ block.super }}
+<style>
+	.calendar-page {
+		max-width: 1100px;
+		margin: 0 auto;
+		padding: 2rem 1rem;
+	}
+
+	.calendar-heading {
+		display: flex;
+		justify-content: space-between;
+		align-items: end;
+		gap: 1rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.calendar-heading h1 {
+		margin: 0;
+	}
+
+	.calendar-heading p {
+		margin: 0.4rem 0 0;
+	}
+
+	.calendar-legend {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+		margin: 0 0 1rem;
+		padding: 0;
+		list-style: none;
+	}
+
+	.legend-item {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.45rem;
+	}
+
+	.legend-color {
+		width: 0.8rem;
+		height: 0.8rem;
+		border-radius: 50%;
+		background: #d9f2df;
+	}
+
+	.legend-color--busy {
+		background: #f4c2c2;
+	}
+
+	.calendar-scroll {
+		overflow-x: auto;
+	}
+
+	.calendar {
+		display: grid;
+		grid-template-columns: 5.5rem repeat(5, minmax(9rem, 1fr));
+		min-width: 52rem;
+		border-top: 1px solid #d8d8d8;
+		border-left: 1px solid #d8d8d8;
+	}
+
+	.calendar-cell {
+		min-height: 4.5rem;
+		padding: 0.7rem;
+		border-right: 1px solid #d8d8d8;
+		border-bottom: 1px solid #d8d8d8;
+		background: #fff;
+	}
+
+	.calendar-cell--header {
+		min-height: auto;
+		background: #f5f5f5;
+		font-weight: 700;
+		text-align: center;
+	}
+
+	.calendar-cell--time {
+		display: flex;
+		align-items: flex-start;
+		justify-content: center;
+		color: #555;
+		font-size: 0.9rem;
+	}
+
+	.calendar-cell--available {
+		background: #f1fbf3;
+	}
+
+	.calendar-cell--busy {
+		background: #fff0f0;
+		color: #8a1f1f;
+	}
+
+	.calendar-status {
+		display: block;
+		font-size: 0.9rem;
+		font-weight: 600;
+	}
+
+	@media (max-width: 640px) {
+		.calendar-heading {
+			display: block;
+		}
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="calendar-page" aria-labelledby="calendar-title">
+	<div class="calendar-heading">
+		<div>
+			<h1 id="calendar-title">Calendario de reservas</h1>
+			<p>Disponibilidad del {{ inicio_semana|date:"d/m" }} al {{ fin_semana|date:"d/m/Y" }}</p>
+		</div>
+		<a href="{% url 'formulario_reserva' %}">Solicitar una reserva</a>
+	</div>
+
+	<ul class="calendar-legend" aria-label="Leyenda del calendario">
+		<li class="legend-item"><span class="legend-color" aria-hidden="true"></span>Disponible</li>
+		<li class="legend-item"><span class="legend-color legend-color--busy" aria-hidden="true"></span>Ocupado</li>
+	</ul>
+
+	<div class="calendar-scroll">
+		<div class="calendar" role="grid" aria-label="Disponibilidad semanal">
+			<div class="calendar-cell calendar-cell--header" role="columnheader">Hora</div>
+			{% for dia in dias %}
+				<div class="calendar-cell calendar-cell--header" role="columnheader">
+					{{ dia.nombre }}<br><small>{{ dia.fecha|date:"d/m" }}</small>
+				</div>
+			{% endfor %}
+
+			{% for fila in filas_calendario %}
+				<div class="calendar-cell calendar-cell--time" role="rowheader">{{ fila.hora }}</div>
+				{% for celda in fila.celdas %}
+					<div class="calendar-cell {% if celda.ocupado %}calendar-cell--busy{% else %}calendar-cell--available{% endif %}" role="gridcell"{% if celda.ocupado %} aria-label="{{ celda.fecha|date:'d/m' }} a las {{ fila.hora }}, ocupado"{% endif %}>
+						<span class="calendar-status">{{ celda.estado }}</span>
+					</div>
+				{% endfor %}
+			{% endfor %}
+		</div>
+	</div>
+</section>
+{% endblock %}

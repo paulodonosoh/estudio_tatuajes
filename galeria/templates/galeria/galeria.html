@@ -1,0 +1,37 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="galeria-container">
+    <h1>{{ titulo_seccion }}</h1>
+    
+    {% if artistas %}
+        <div class="grid-artistas">
+            {% for artista in artistas %}
+                <div class="tarjeta-artista">
+                    <img src="{% static artista.imagen %}" alt="{{ artista.persona }}" width="200">
+                    <h3>Artista: {{ artista.persona }}</h3>
+                    <p><strong>Estilo:</strong> {{ artista.estilo }}</p>
+                    
+                    <p><strong>Tatuajes ya creados:</strong></p>
+                    <ul>
+                        {% for creado in artista.creados %}
+                            <li>{{ creado }}</li>
+                        {% endfor %}
+                    </ul>
+
+                    <p><strong>Tatuajes que puede realizar:</strong></p>
+                    <ul>
+                        {% for posible in artista.puede_hacer %}
+                            <li>{{ posible }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <hr>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No hay información de artistas disponible.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "reserva/base.html" %}
+
+{% block title %}Formulario de reserva | Estudio de tatuajes{% endblock %}
+
+{% block content %}
+<section aria-labelledby="reservation-title">
+    <h1 id="reservation-title">Reserva tu hora</h1>
+    <p>Completa tus datos para solicitar una cita en el estudio.</p>
+
+    <form method="post" action="{% url 'formulario_reserva' %}">
+        {% csrf_token %}
+
+        <div>
+            <label for="artista">Artista</label>
+            <select id="artista" name="artista" required>
+                <option value="" selected disabled>Selecciona un artista</option>
+                {% for artista in artistas %}
+                    <option value="{{ artista.valor }}">{{ artista.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label for="telefono">Teléfono de contacto</label>
+            <input
+                type="tel"
+                id="telefono"
+                name="telefono"
+                autocomplete="tel"
+                placeholder="Ej.: 612 345 678"
+                required
+            >
+        </div>
+
+        <div>
+            <label for="dia">Día</label>
+            <input type="date" id="dia" name="dia" min="{{ fecha_minima }}" required>
+        </div>
+
+        <div>
+            <label for="hora">Hora</label>
+            <input type="time" id="hora" name="hora" value="{{ hora_inicial }}" required>
+        </div>
+
+        <button type="submit">Solicitar reserva</button>
+    </form>
+</section>
+{% endblock %}
