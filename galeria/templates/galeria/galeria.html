@@ -1,21 +1,85 @@
-{% extends 'core/base.html' %}
+<!-- RÚBRICA: Herencia de templates -->
+{% extends 'core/base.html' %} 
+{% load static %}
+
+{% block title %}Galería de Tatuajes{% endblock %}
 
 {% block content %}
-<div class="galeria-container">
-    <h1>{{ titulo_seccion }}</h1>
+<style>
+    /* Diseño Pestañas Internas de Galería */
+    .tabs { display: flex; justify-content: center; border-bottom: 1px solid #dbdbdb; margin-bottom: 30px; gap: 40px;}
+    .tab-btn { background: none; border: none; padding: 10px 0; cursor: pointer; font-size: 12px; font-weight: 600; color: #8e8e8e; letter-spacing: 1px; }
+    .tab-btn.active { color: #262626; border-top: 1px solid #262626; margin-top: -1px; }
+
+    /* Grilla Estilo Instagram */
+    .grid { display: none; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+    .grid.active { display: grid; }
     
-    <!-- Cumpliendo el requisito: Uso de IF -->
-    {% if tatuajes %}
-        <ul>
-            <!-- Cumpliendo el requisito: Uso de FOR -->
-            {% for tatuaje in tatuajes %}
-                <li>
-                    <strong>{{ tatuaje.nombre }}</strong> - Estilo: {{ tatuaje.estilo }}
-                </li>
-            {% endfor %}
-        </ul>
+    /* Tarjetas de Tatuajes */
+    .card { background: #fff; border: 1px solid #dbdbdb; border-radius: 3px; overflow: hidden; display: flex; flex-direction: column; }
+    .card img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
+    .card-body { padding: 15px; flex-grow: 1; }
+    .card-title { font-weight: bold; font-size: 14px; margin: 0 0 5px; color: #262626;}
+    .card-text { font-size: 14px; color: #262626; margin: 0; line-height: 1.4; }
+    .card-price { font-weight: bold; color: #0095f6; margin-top: 8px; font-size: 14px;}
+</style>
+
+<h2 style="text-align: center; color: #262626; margin-bottom: 30px;">{{ titulo_seccion }}</h2>
+
+<!-- Botones de las sub-pestañas -->
+<div class="tabs">
+    <button class="tab-btn active" onclick="mostrarPestana('hechos', this)">TRABAJOS REALIZADOS</button>
+    <button class="tab-btn" onclick="mostrarPestana('disponibles', this)">DISEÑOS DISPONIBLES</button>
+</div>
+
+<!-- RÚBRICA: Uso de IF y FOR para contenido dinámico -->
+<!-- SECCIÓN 1: TRABAJOS REALIZADOS -->
+<div id="hechos" class="grid active">
+    {% if tatuajes_hechos %}
+        {% for tatuaje in tatuajes_hechos %}
+        <div class="card">
+            <!-- RÚBRICA: Carga de estáticos -->
+            <img src="{% static 'galeria/images/' %}{{ tatuaje.imagen }}" alt="{{ tatuaje.nombre }}">
+            <div class="card-body">
+                <p class="card-title">{{ tatuaje.nombre }}</p>
+                <p class="card-text">{{ tatuaje.descripcion }}</p>
+            </div>
+        </div>
+        {% endfor %}
     {% else %}
-        <p>Aún no hay tatuajes en la galería.</p>
+        <p style="grid-column: 1 / -1; text-align: center;">No hay trabajos realizados para mostrar aún.</p>
     {% endif %}
 </div>
+
+<!-- SECCIÓN 2: DISEÑOS DISPONIBLES -->
+<div id="disponibles" class="grid">
+    {% if tatuajes_disponibles %}
+        {% for tatuaje in tatuajes_disponibles %}
+        <div class="card">
+            <img src="{% static 'galeria/images/' %}{{ tatuaje.imagen }}" alt="{{ tatuaje.nombre }}">
+            <div class="card-body">
+                <p class="card-title">{{ tatuaje.nombre }}</p>
+                <p class="card-text">{{ tatuaje.descripcion }}</p>
+                <!-- IF anidado para mostrar el precio solo si existe -->
+                {% if tatuaje.precio %}
+                <p class="card-price">Precio: {{ tatuaje.precio }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p style="grid-column: 1 / -1; text-align: center;">No hay diseños disponibles en este momento.</p>
+    {% endif %}
+</div>
+
+<!-- Lógica simple en JS para cambiar las pestañas sin recargar -->
+<script>
+    function mostrarPestana(id, btn) {
+        document.querySelectorAll('.grid').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        
+        document.getElementById(id).classList.add('active');
+        btn.classList.add('active');
+    }
+</script>
 {% endblock %}
