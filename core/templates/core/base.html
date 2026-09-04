@@ -1,0 +1,36 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Estudio de tatuajes{% endblock %}</title>
+    <meta name="description" content="{% block description %}Estudio de tatuajes{% endblock %}">
+
+    {% block styles %}
+    <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
+    {% endblock %}
+</head>
+<body>
+    <header>
+        {% block header %}
+        <nav aria-label="Navegación principal">
+            <a href="{% url 'home' %}">Inicio</a>
+        </nav>
+        {% endblock %}
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        {% block footer %}
+        <p>&copy; {% now "Y" %} Estudio de tatuajes</p>
+        {% endblock %}
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
