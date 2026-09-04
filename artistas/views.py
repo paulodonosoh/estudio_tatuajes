@@ -6,7 +6,7 @@ def artistas(request):
             'nombre': 'Israel',
             'estilos': ['Realismo', 'Tradicional', 'Neo Tradicional'],
             'descripcion': 'Israel combina el realismo y la tradición con un gran cuidado por el detalle y la precisión.',
-            'imagen': 'https://images.unsplash.com/photo-1598373182133-52452f7691ef?auto=format&fit=crop&w=900&q=85',
+            'imagen': 'https://duckduckgo.com/?q=foto+de+un+tatuador&t=brave&ia=images&iax=images&iai=https%3A%2F%2Felinformantememphis.com%2Fwp-content%2Fuploads%2F2025%2F09%2FIMG_3131-2-scaled.jpg',
             'url': 'israel',
         },
         {
@@ -34,7 +34,7 @@ def israel(request):
         'contacto': 'israel@estudiotatuajes.cl | +56 9 1234 5678',
         'dias': 'Lunes, miércoles y viernes',
         'horarios': '10:00 a 18:00',
-        'imagen': 'https://images.unsplash.com/photo-1598373182133-52452f7691ef?auto=format&fit=crop&w=1200&q=85',
+        'imagen': 'https://duckduckgo.com/?q=foto+de+un+tatuador&t=brave&ia=images&iax=images&iai=https%3A%2F%2Felinformantememphis.com%2Fwp-content%2Fuploads%2F2025%2F09%2FIMG_3131-2-scaled.jpg',
     })
 
 def paulo(request):
