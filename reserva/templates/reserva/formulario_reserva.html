@@ -14,9 +14,9 @@
             <label for="artista">Artista</label>
             <select id="artista" name="artista" required>
                 <option value="" selected disabled>Selecciona un artista</option>
-                <option value="israel">Israel</option>
-                <option value="noah">Noah</option>
-                <option value="paulo">Paulo</option>
+                {% for artista in artistas %}
+                    <option value="{{ artista.valor }}">{{ artista.nombre }}</option>
+                {% endfor %}
             </select>
         </div>
 
@@ -34,12 +34,12 @@
 
         <div>
             <label for="dia">Día</label>
-            <input type="date" id="dia" name="dia" required>
+            <input type="date" id="dia" name="dia" min="{{ fecha_minima }}" required>
         </div>
 
         <div>
             <label for="hora">Hora</label>
-            <input type="time" id="hora" name="hora" required>
+            <input type="time" id="hora" name="hora" value="{{ hora_inicial }}" required>
         </div>
 
         <button type="submit">Solicitar reserva</button>
