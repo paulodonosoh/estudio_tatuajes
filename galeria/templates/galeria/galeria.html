@@ -1,0 +1,21 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="galeria-container">
+    <h1>{{ titulo_seccion }}</h1>
+    
+    <!-- Cumpliendo el requisito: Uso de IF -->
+    {% if tatuajes %}
+        <ul>
+            <!-- Cumpliendo el requisito: Uso de FOR -->
+            {% for tatuaje in tatuajes %}
+                <li>
+                    <strong>{{ tatuaje.nombre }}</strong> - Estilo: {{ tatuaje.estilo }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aún no hay tatuajes en la galería.</p>
+    {% endif %}
+</div>
+{% endblock %}
