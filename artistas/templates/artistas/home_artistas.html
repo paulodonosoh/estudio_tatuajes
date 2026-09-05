@@ -14,7 +14,7 @@
         {% for artista in artistas %}
         <a class="artista-card" href="{% url artista.url %}">
             {% if artista.imagen %}
-                <img src="{{ artista.imagen.url }}" alt="{{ artista.nombre }}, tatuador del estudio">
+                <img src="{{ artista.imagen }}" alt="{{ artista.nombre }}, tatuador del estudio">
             {% else %}
                 <img src="/media/artistas/default.jpg" alt="{{ artista.nombre }}, tatuador del estudio">
             {% endif %}
