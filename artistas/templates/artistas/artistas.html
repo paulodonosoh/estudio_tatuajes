@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{% block title %}Artistas | Estudio de tatuajes{% endblock %}</title>
+	<style>
+	.artista {
+		max-width: 960px;
+		margin: 0 auto;
+		padding: 2rem 1rem;
+	}
+
+	.artista__encabezado {
+		display: grid;
+		grid-template-columns: minmax(220px, 360px) 1fr;
+		gap: 2rem;
+		align-items: center;
+		margin-bottom: 2rem;
+	}
+
+	.artista__imagen {
+		width: 100%;
+		aspect-ratio: 1 / 1;
+		object-fit: cover;
+		border-radius: 12px;
+	}
+
+	.artista__nombre {
+		margin: 0;
+		font-size: clamp(2rem, 5vw, 4rem);
+	}
+
+	.artista__datos {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1rem;
+	}
+
+	.artista__dato {
+		padding: 1.25rem;
+		border: 1px solid currentColor;
+		border-radius: 8px;
+	}
+
+	.artista__dato--amplio {
+		grid-column: 1 / -1;
+	}
+
+	.artista__dato h2 {
+		margin-top: 0;
+	}
+
+	@media (max-width: 640px) {
+		.artista__encabezado,
+		.artista__datos {
+			grid-template-columns: 1fr;
+		}
+
+		.artista__dato--amplio {
+			grid-column: auto;
+		}
+	}
+</style>
+</head>
+<body>
+	<header>
+		<nav aria-label="Navegación de artistas">
+			<a href="{% url 'artistas' %}">Todos los artistas</a>
+			<a href="{% url 'home' %}">Inicio</a>
+		</nav>
+	</header>
+
+	<main>
+		<section class="artista">
+			{% block artista_contenido %}
+			<section class="artista__encabezado">
+				<img class="artista__imagen" src="{{ imagen }}" alt="{{ nombre }}, tatuador del estudio">
+				<div>
+					<p>Artista tatuador</p>
+					<h1 class="artista__nombre">{{ nombre }}</h1>
+				</div>
+			</section>
+
+			<section class="artista__datos" aria-label="Información de {{ nombre }}">
+				<article class="artista__dato">
+					<h2>Estilos</h2>
+					<p>{{ estilos|join:", " }}</p>
+				</article>
+
+				<article class="artista__dato">
+					<h2>Contacto</h2>
+					<p>{{ contacto }}</p>
+				</article>
+
+				<article class="artista__dato artista__dato--amplio">
+					<h2>Sobre {{ nombre }}</h2>
+					<p>{{ descripcion }}</p>
+				</article>
+
+				<article class="artista__dato">
+					<h2>Días disponibles</h2>
+					<p>{{ dias }}</p>
+				</article>
+
+				<article class="artista__dato">
+					<h2>Horarios</h2>
+					<p>{{ horarios }}</p>
+				</article>
+			</section>
+			{% endblock %}
+		</section>
+	</main>
+
+	<footer>
+		<p>&copy; {% now "Y" %} Estudio de tatuajes</p>
+	</footer>
+</body>
+</html>
