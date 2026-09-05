@@ -1,32 +1,48 @@
 from django.shortcuts import render
 
 def lista_tatuajes(request):
-    artistas = [
+    tatuajes_hechos = [
         {
-            'persona': 'Israel Vargas',
-            'estilo': 'Old School',
-            'creados': ['Rosa Tradicional', 'Ancla clásica'],
-            'puede_hacer': ['Pantera Negra', 'Daga Tradicional'],
-            'imagen': 'galeria/img/tatuaje1.jpg'
+            'nombre': 'Rosa Tradicional',
+            'imagen': 'rosa.jpeg',
+            'descripcion': 'Rosa estilo Old School ya cicatrizada.'
         },
         {
-            'persona': 'Paulo Donoso',
-            'estilo': 'Blackwork',
-            'creados': ['Lobo Geométrico', 'Mandalas'],
-            'puede_hacer': ['Geometría Sagrada', 'Dotwork'],
-            'imagen': 'galeria/img/tatuaje2.jpg'
+            'nombre': 'Lobo Geométrico',
+            'imagen': 'lobo.jpeg',
+            'descripcion': 'Lobo en blackwork con detalles geométricos.'
         },
         {
-            'persona': 'Noah Del Desposito',
-            'estilo': 'Irezumi',
-            'creados': ['Dragón Japonés', 'Koi Fish'],
-            'puede_hacer': ['Hannya Mask', 'Samurai'],
-            'imagen': 'galeria/img/tatuaje3.jpg'
+            'nombre': 'Dragón Japonés',
+            'imagen': 'dragon.jpeg',
+            'descripcion': 'Proyecto de manga completa estilo Irezumi.'
         }
     ]
-    
+
+    tatuajes_disponibles = [
+        {
+            'nombre': 'Old School clásico',
+            'imagen': 'boceto1.jpeg',
+            'descripcion': 'Diseño Old School clásico. Ideal para el pecho o mano.',
+            'precio': '$40.000'
+        },
+        {
+            'nombre': 'Geométricos',
+            'imagen': 'boceto2.jpeg',
+            'descripcion': 'Pieza Blackwork con puntillismo. Diseño único y exclusivo.',
+            'precio': '$60.000'
+        },
+        {
+            'nombre': 'Geisha Tradicional',
+            'imagen': 'boceto3.jpeg',
+            'descripcion': 'Boceto estilo Irezumi. Listo para adaptarse al antebrazo.',
+            'precio': '$80.000'
+        }
+    ]
+
     context = {
-        'artistas': artistas,
-        'titulo_seccion': 'Nuestros Artistas y Trabajos'
+        'tatuajes_hechos': tatuajes_hechos,
+        'tatuajes_disponibles': tatuajes_disponibles,
+        'titulo_seccion': 'Nuestra Galería de Trabajos'
     }
     return render(request, 'galeria/galeria.html', context)
