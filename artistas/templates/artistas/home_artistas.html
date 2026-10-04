@@ -8,6 +8,7 @@
         <p>Estudio de tatuajes</p>
         <h1>Elige a tu artista</h1>
         <p>Conoce el estilo de cada tatuador y descubre su información completa.</p>
+        <a class="artistas-home__crear" href="{% url 'crear_artista' %}">Agregar artista</a>
     </header>
 
     <section class="artistas-home__cuadricula" aria-label="Artistas disponibles">
@@ -28,6 +29,21 @@
         {% endif %}
         {% endfor %}
     </section>
+
+    <section class="artistas-home__gestion" aria-label="Gestionar artistas">
+        <h2>Gestionar artistas</h2>
+        {% for artista in artistas %}
+        <div class="artistas-home__fila">
+            <span>{{ artista.nombre }}</span>
+            <div>
+                <a href="{% url 'editar_artista' artista.pk %}">Editar</a>
+                <a href="{% url 'eliminar_artista' artista.pk %}">Eliminar</a>
+            </div>
+        </div>
+        {% empty %}
+        <p>Aún no hay artistas registrados.</p>
+        {% endfor %}
+    </section>
 </section>
 
 <style>
@@ -45,6 +61,15 @@
     .artistas-home__encabezado h1 {
         margin: 0.25rem 0 0.75rem;
         font-size: clamp(2rem, 5vw, 4rem);
+    }
+
+    .artistas-home__crear {
+        display: inline-block;
+        padding: 0.7rem 1rem;
+        color: white;
+        background: #222;
+        border-radius: 4px;
+        text-decoration: none;
     }
 
     .artistas-home__cuadricula {
@@ -100,6 +125,30 @@
     .artista-card:focus-visible {
         outline: 3px solid currentColor;
         outline-offset: 4px;
+    }
+
+    .artistas-home__gestion {
+        margin-top: 3rem;
+    }
+
+    .artistas-home__fila {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.8rem 0;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .artistas-home__fila div {
+        display: flex;
+        gap: 1rem;
+    }
+
+    @media (max-width: 480px) {
+        .artistas-home__fila {
+            align-items: flex-start;
+            flex-direction: column;
+        }
     }
 
     @media (max-width: 700px) {

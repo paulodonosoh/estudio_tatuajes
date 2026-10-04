@@ -1,0 +1,15 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Eliminar artista | Estudio de tatuajes{% endblock %}
+
+{% block content %}
+<section style="max-width: 640px; margin: 2rem auto; padding: 0 1rem;">
+    <h1>Eliminar artista</h1>
+    <p>¿Seguro que deseas eliminar a <strong>{{ artista.nombre }}</strong>?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Sí, eliminar</button>
+        <a href="{% url 'artistas' %}">Cancelar</a>
+    </form>
+</section>
+{% endblock %}

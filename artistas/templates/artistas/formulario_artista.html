@@ -1,0 +1,15 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ accion }} artista | Estudio de tatuajes{% endblock %}
+
+{% block content %}
+<section style="max-width: 640px; margin: 2rem auto; padding: 0 1rem;">
+    <h1>{{ accion }} artista</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar artista</button>
+        <a href="{% url 'artistas' %}">Cancelar</a>
+    </form>
+</section>
+{% endblock %}
