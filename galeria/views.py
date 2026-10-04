@@ -1,48 +1,41 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Tatuaje
+from .forms import TatuajeForm
 
 def lista_tatuajes(request):
-    tatuajes_hechos = [
-        {
-            'nombre': 'Rosa Tradicional',
-            'imagen': 'rosa.jpeg',
-            'descripcion': 'Rosa estilo Old School ya cicatrizada.'
-        },
-        {
-            'nombre': 'Lobo Geométrico',
-            'imagen': 'lobo.jpeg',
-            'descripcion': 'Lobo en blackwork con detalles geométricos.'
-        },
-        {
-            'nombre': 'Dragón Japonés',
-            'imagen': 'dragon.jpeg',
-            'descripcion': 'Proyecto de manga completa estilo Irezumi.'
-        }
-    ]
+    # Filtramos: los que tienen False van a hechos, los que tienen True van a disponibles
+    hechos = Tatuaje.objects.filter(es_disponible=False)
+    disponibles = Tatuaje.objects.filter(es_disponible=True)
+    
+    return render(request, 'galeria/galeria.html', {
+        'tatuajes_hechos': hechos,
+        'tatuajes_disponibles': disponibles
+    })
 
-    tatuajes_disponibles = [
-        {
-            'nombre': 'Old School clásico',
-            'imagen': 'boceto1.jpeg',
-            'descripcion': 'Diseño Old School clásico. Ideal para el pecho o mano.',
-            'precio': '$40.000'
-        },
-        {
-            'nombre': 'Geométricos',
-            'imagen': 'boceto2.jpeg',
-            'descripcion': 'Pieza Blackwork con puntillismo. Diseño único y exclusivo.',
-            'precio': '$60.000'
-        },
-        {
-            'nombre': 'Geisha Tradicional',
-            'imagen': 'boceto3.jpeg',
-            'descripcion': 'Boceto estilo Irezumi. Listo para adaptarse al antebrazo.',
-            'precio': '$80.000'
-        }
-    ]
+def crear_tatuaje(request):
+    if request.method == 'POST':
+        form = TatuajeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_tatuajes')
+    else:
+        form = TatuajeForm()
+    return render(request, 'galeria/formulario.html', {'form': form, 'accion': 'Crear'})
 
-    context = {
-        'tatuajes_hechos': tatuajes_hechos,
-        'tatuajes_disponibles': tatuajes_disponibles,
-        'titulo_seccion': 'Nuestra Galería de Trabajos'
-    }
-    return render(request, 'galeria/galeria.html', context)
+def editar_tatuaje(request, id):
+    tatuaje = get_object_or_404(Tatuaje, id=id)
+    if request.method == 'POST':
+        form = TatuajeForm(request.POST, instance=tatuaje)
+        if form.is_valid():
+            form.save()
+            return redirect('lista_tatuajes')
+    else:
+        form = TatuajeForm(instance=tatuaje)
+    return render(request, 'galeria/formulario.html', {'form': form, 'accion': 'Editar'})
+
+def eliminar_tatuaje(request, id):
+    tatuaje = get_object_or_404(Tatuaje, id=id)
+    if request.method == 'POST':
+        tatuaje.delete()
+        return redirect('lista_tatuajes')
+    return render(request, 'galeria/confirmar_eliminar.html', {'tatuaje': tatuaje})

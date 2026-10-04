@@ -5,40 +5,61 @@
 
 {% block content %}
 <div class="galeria-container">
-    <h2>{{ titulo_seccion }}</h2>
+    
+<!-- Botón para crear un nuevo tatuaje -->
+    <div style="text-align: center; margin-bottom: 20px;">
+        <a href="{% url 'crear_tatuaje' %}" class="btn-crear">
+            ➕ Añadir Nuevo Tatuaje
+        </a>
+    </div>
+
+    <h2>Nuestra Galería de Trabajos</h2>
 
     <div class="tabs">
         <button class="tab-btn active" type="button" onclick="mostrarPestana('hechos', this)">TRABAJOS REALIZADOS</button>
         <button class="tab-btn" type="button" onclick="mostrarPestana('disponibles', this)">DISEÑOS DISPONIBLES</button>
     </div>
-
-    <div id="hechos" class="grid active">
+<div id="hechos" class="grid active">
         {% for tatuaje in tatuajes_hechos %}
         <article class="card">
-            <img src="{% static 'galeria/images/' %}{{ tatuaje.imagen }}" alt="{{ tatuaje.nombre }}">
+            <img src="{% static tatuaje.imagen_url %}" alt="{{ tatuaje.titulo }}">
             <div class="card-body">
-                <h3>{{ tatuaje.nombre }}</h3>
-                <p>{{ tatuaje.descripcion }}</p>
+                <h3>{{ tatuaje.titulo }}</h3>
+                <p><strong>Artista:</strong> {{ tatuaje.artista }}</p>
+                <p><strong>Estilo:</strong> {{ tatuaje.estilo }}</p>
+                <div class="acciones-crud">
+                    <a href="{% url 'editar_tatuaje' tatuaje.id %}" class="btn-editar">✏️ Editar</a>
+                    <a href="{% url 'eliminar_tatuaje' tatuaje.id %}" class="btn-eliminar">🗑️ Eliminar</a>
+                </div>
             </div>
         </article>
         {% empty %}
-        <p>No hay trabajos realizados para mostrar aún.</p>
+        <p>No hay trabajos realizados en la base de datos aún.</p>
         {% endfor %}
     </div>
 
     <div id="disponibles" class="grid">
         {% for tatuaje in tatuajes_disponibles %}
         <article class="card">
-            <img src="{% static 'galeria/images/' %}{{ tatuaje.imagen }}" alt="{{ tatuaje.nombre }}">
+            <img src="{% static tatuaje.imagen_url %}" alt="{{ tatuaje.titulo }}">
             <div class="card-body">
-                <h3>{{ tatuaje.nombre }}</h3>
-                <p>{{ tatuaje.descripcion }}</p>
-                {% if tatuaje.precio %}<p class="card-price">Precio: {{ tatuaje.precio }}</p>{% endif %}
+                <h3>{{ tatuaje.titulo }}</h3>
+                <p><strong>Artista:</strong> {{ tatuaje.artista }}</p>
+                <p><strong>Estilo:</strong> {{ tatuaje.estilo }}</p>
+                <div class="acciones-crud">
+                    <a href="{% url 'editar_tatuaje' tatuaje.id %}" class="btn-editar">✏️ Editar</a>
+                    <a href="{% url 'eliminar_tatuaje' tatuaje.id %}" class="btn-eliminar">🗑️ Eliminar</a>
+                </div>
             </div>
         </article>
         {% empty %}
-        <p>No hay diseños disponibles en este momento.</p>
+        <p>No hay diseños disponibles por el momento.</p>
         {% endfor %}
+    </div>
+
+
+    <div id="disponibles" class="grid">
+        <p>Sección en construcción para próximos diseños.</p>
     </div>
 </div>
 
@@ -54,9 +75,14 @@
     .card img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
     .card-body { padding: 1rem; }
     .card-body h3 { margin: 0 0 0.5rem; }
-    .card-body p { margin: 0; line-height: 1.4; }
-    .card-price { margin-top: 0.75rem !important; font-weight: 700; }
+    .card-body p { margin: 0 0 0.3rem; line-height: 1.4; }
     @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } .tabs { gap: 1rem; } }
+
+    /* ESTILOS AÑADIDOS PARA LOS BOTONES CRUD */
+    .btn-crear { background: #222; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block; }
+    .acciones-crud { margin-top: 15px; border-top: 1px solid #eee; padding-top: 10px; display: flex; justify-content: space-between; }
+    .btn-editar { color: #007bff; text-decoration: none; font-weight: bold; }
+    .btn-eliminar { color: #dc3545; text-decoration: none; font-weight: bold; }
 </style>
 
 <script>

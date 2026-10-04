@@ -1,0 +1,21 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Eliminar Tatuaje{% endblock %}
+
+{% block content %}
+<div class="galeria-container" style="text-align: center; max-width: 600px; margin: 0 auto;">
+    <h2>Eliminar Tatuaje</h2>
+    
+    <div style="background: #fff; padding: 30px; border: 1px solid #dbdbdb; border-radius: 5px; margin-top: 20px;">
+        <p style="font-size: 1.1rem; margin-bottom: 20px;">
+            ¿Estás seguro que deseas eliminar permanentemente el tatuaje "<strong>{{ tatuaje.titulo }}</strong>" de {{ tatuaje.artista }}?
+        </p>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" style="background: #dc3545; color: #fff; padding: 10px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">Sí, eliminar definitivamente</button>
+            <a href="{% url 'lista_tatuajes' %}" style="margin-left: 15px; color: #777; text-decoration: none; font-weight: bold;">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
