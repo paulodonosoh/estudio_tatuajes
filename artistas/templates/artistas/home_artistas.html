@@ -12,14 +12,20 @@
 
     <section class="artistas-home__cuadricula" aria-label="Artistas disponibles">
         {% for artista in artistas %}
-        <a class="artista-card" href="{% url artista.url %}">
+        {% if artista.url %}
+        <a class="artista-card" href="{% url 'detalle_artista' artista.url %}">
+        {% else %}
+        <div class="artista-card">
+        {% endif %}
             {% if artista.imagen %}
-                <img src="{{ artista.imagen }}" alt="{{ artista.nombre }}, tatuador del estudio">
-            {% else %}
-                <img src="/media/artistas/default.jpg" alt="{{ artista.nombre }}, tatuador del estudio">
+                <img src="{{ artista.imagen.url }}" alt="{{ artista.nombre }}, tatuador del estudio">
             {% endif %}
             <span class="artista-card__nombre">{{ artista.nombre }}</span>
+        {% if artista.url %}
         </a>
+        {% else %}
+        </div>
+        {% endif %}
         {% endfor %}
     </section>
 </section>
