@@ -1,0 +1,53 @@
+{% extends "reserva/base.html" %}
+
+{% block title %}Reservas | Estudio de tatuajes{% endblock %}
+
+{% block content %}
+<section aria-labelledby="reservations-title">
+    <h1 id="reservations-title">Reservas registradas</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p role="status">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <p><a href="{% url 'formulario_reserva' %}">Crear una reserva</a></p>
+
+    {% if reservas %}
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Artista</th>
+                        <th>Fecha</th>
+                        <th>Horario</th>
+                        <th>Estado</th>
+                        <th>Teléfono</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reserva in reservas %}
+                        <tr>
+                            <td>{{ reserva.nombre_cliente }}</td>
+                            <td>{{ reserva.artista }}</td>
+                            <td>{{ reserva.fecha|date:"d/m/Y" }}</td>
+                            <td>{{ reserva.hora_inicio|time:"H:i" }} - {{ reserva.hora_fin|time:"H:i" }}</td>
+                            <td>{{ reserva.get_estado_display }}</td>
+                            <td>{{ reserva.telefono }}</td>
+                            <td>
+                                <a href="{% url 'editar_reserva' reserva.id %}">Editar</a>
+                                <a href="{% url 'eliminar_reserva' reserva.id %}">Eliminar</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>No hay reservas registradas.</p>
+    {% endif %}
+</section>
+{% endblock %}

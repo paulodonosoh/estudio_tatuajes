@@ -1,7 +1,11 @@
 from datetime import timedelta
 
-from django.shortcuts import render
+from django.contrib import messages
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+
+from .forms import ReservaForm
+from .models import Reserva
 
 # Create your views here.
 def calendario_view(request):
@@ -55,13 +59,58 @@ def calendario_view(request):
 
 
 def formulario_reserva_view(request):
-    contexto = {
-        'artistas': [
-            {'valor': 'israel', 'nombre': 'Israel'},
-            {'valor': 'noah', 'nombre': 'Noah'},
-            {'valor': 'paulo', 'nombre': 'Paulo'},
-        ],
-        'fecha_minima': timezone.localdate().isoformat(),
-        'hora_inicial': '09:00',
-    }
-    return render(request, 'reserva/formulario_reserva.html', contexto)
+    if request.method == 'POST':
+        form = ReservaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'La reserva se creó correctamente.')
+            return redirect('lista_reservas')
+    else:
+        form = ReservaForm()
+
+    return render(
+        request,
+        'reserva/formulario_reserva.html',
+        {'form': form},
+    )
+
+
+def lista_reservas_view(request):
+    reservas = Reserva.objects.select_related('artista').all()
+    return render(
+        request,
+        'reserva/lista_reservas.html',
+        {'reservas': reservas},
+    )
+
+
+def editar_reserva_view(request, reserva_id):
+    reserva = get_object_or_404(Reserva, pk=reserva_id)
+    if request.method == 'POST':
+        form = ReservaForm(request.POST, instance=reserva)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'La reserva se actualizó correctamente.')
+            return redirect('lista_reservas')
+    else:
+        form = ReservaForm(instance=reserva)
+
+    return render(
+        request,
+        'reserva/editar_reserva.html',
+        {'form': form, 'reserva': reserva},
+    )
+
+
+def eliminar_reserva_view(request, reserva_id):
+    reserva = get_object_or_404(Reserva, pk=reserva_id)
+    if request.method == 'POST':
+        reserva.delete()
+        messages.success(request, 'La reserva se eliminó correctamente.')
+        return redirect('lista_reservas')
+
+    return render(
+        request,
+        'reserva/confirmar_eliminacion.html',
+        {'reserva': reserva},
+    )

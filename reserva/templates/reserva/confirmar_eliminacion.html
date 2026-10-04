@@ -1,0 +1,19 @@
+{% extends "reserva/base.html" %}
+
+{% block title %}Eliminar reserva | Estudio de tatuajes{% endblock %}
+
+{% block content %}
+<section aria-labelledby="delete-reservation-title">
+    <h1 id="delete-reservation-title">Confirmar eliminación</h1>
+    <p>
+        ¿Quieres eliminar la reserva de {{ reserva.nombre_cliente }}
+        para el {{ reserva.fecha|date:"d/m/Y" }}?
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirmar eliminación</button>
+        <a href="{% url 'lista_reservas' %}">Cancelar</a>
+    </form>
+</section>
+{% endblock %}
