@@ -20,8 +20,9 @@ class Reserva(models.Model):
 		on_delete=models.PROTECT,
 		related_name='reservas',
 	)
-	inicio = models.DateTimeField()
-	fin = models.DateTimeField()
+	fecha = models.DateField()
+	hora_inicio = models.TimeField()
+	hora_fin = models.TimeField()
 	descripcion = models.TextField(blank=True)
 	estado = models.CharField(
 		max_length=20,
@@ -32,17 +33,17 @@ class Reserva(models.Model):
 	actualizado_en = models.DateTimeField(auto_now=True)
 
 	class Meta:
-		ordering = ['inicio']
+		ordering = ['fecha', 'hora_inicio']
 		constraints = [
 			models.CheckConstraint(
-				condition=Q(fin__gt=F('inicio')),
-				name='reserva_fin_despues_de_inicio',
+				condition=Q(hora_fin__gt=F('hora_inicio')),
+				name='reserva_hora_fin_despues_de_inicio',
 			),
 		]
 		indexes = [
-			models.Index(fields=['artista', 'inicio']),
-			models.Index(fields=['estado', 'inicio']),
+			models.Index(fields=['artista', 'fecha', 'hora_inicio']),
+			models.Index(fields=['estado', 'fecha']),
 		]
 
 	def __str__(self):
-		return f'{self.nombre_cliente} - {self.inicio:%d/%m/%Y %H:%M}'
+		return f'{self.nombre_cliente} - {self.fecha:%d/%m/%Y} {self.hora_inicio:%H:%M}'
