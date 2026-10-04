@@ -1,6 +1,7 @@
 .env
 .venv/
 staticfiles/
+*.sqlite3
 
 # Archivos generados por Python
 __pycache__/
