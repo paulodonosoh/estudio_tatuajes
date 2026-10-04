@@ -9,9 +9,14 @@
     
     <form method="POST">
         {% csrf_token %}
+        <input type="text" name="nombre" placeholder="Tu nombre" required maxlength="100" style="padding: 10px; width: 60%; margin-bottom: 10px;">
         <input type="number" name="tamano" step="0.1" placeholder="Ej. 10.5" required style="padding: 10px; width: 60%;">
         <button type="submit" style="padding: 10px 20px; background-color: #333; color: white; border: none; cursor: pointer;">Calcular Precio</button>
     </form>
+
+    {% if error %}
+        <p role="alert" style="margin-top: 20px; color: #b00020;">{{ error }}</p>
+    {% endif %}
 
     {% if precio_estimado %}
         <h3 style="margin-top: 30px; color: #2e7d32;">
