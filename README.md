@@ -41,3 +41,16 @@ Bash
 python manage.py migrate
 python manage.py runserver
 Mi proyecto estará corriendo en http://127.0.0.1:8000/.
+
+## App Reserva - Funcionalidades implementadas
+
+La aplicación `reserva` ya cuenta con las siguientes funcionalidades:
+
+* **CRUD completo de reservas:** permite crear, listar, editar y eliminar reservas desde la interfaz web.
+* **Asociación con artistas:** cada reserva queda vinculada a un artista específico del estudio.
+* **Validación de horarios:** se controla que la hora de término sea mayor que la de inicio y se evita crear reservas inconsistentes.
+* **Calendario semanal:** muestra la disponibilidad por día y horario con base en las reservas registradas en la base de datos.
+* **Filtro por artista:** el calendario puede visualizarse por artista para consultar su disponibilidad individual.
+* **Estados de reserva:** las reservas pueden registrarse con estados como pendiente o confirmada.
+* **Navegación por semanas:** el calendario permite avanzar o retroceder por semanas futuras/pasadas para revisar disponibilidad.
+* **Formularios con validación:** el `ModelForm` valida los datos antes de guardar la reserva, asegurando integridad en la información.
