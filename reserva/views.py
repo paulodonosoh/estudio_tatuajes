@@ -1,8 +1,10 @@
-from datetime import timedelta
+from datetime import datetime, time, timedelta
 
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+
+from artistas.models import Artista
 
 from .forms import ReservaForm
 from .models import Reserva
@@ -10,7 +12,13 @@ from .models import Reserva
 # Create your views here.
 def calendario_view(request):
     hoy = timezone.localdate()
-    lunes = hoy - timedelta(days=hoy.weekday())
+    lunes_actual = hoy - timedelta(days=hoy.weekday())
+    try:
+        semana_actual = int(request.GET.get('semana', 0))
+    except (TypeError, ValueError):
+        semana_actual = 0
+    semana_actual = max(0, min(semana_actual, 3))
+    lunes = lunes_actual + timedelta(weeks=semana_actual)
     dias = [
         {
             'fecha': lunes + timedelta(days=numero_dia),
@@ -20,28 +28,44 @@ def calendario_view(request):
             ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes']
         )
     ]
-    horas = [
-        '09:00', '10:00', '11:00', '12:00',
-        '13:00', '14:00', '15:00', '16:00', '17:00',
+    horas = [time(hora, 0) for hora in range(9, 18)]
+    semanas = [
+        {
+            'numero': numero_semana,
+            'inicio': lunes_actual + timedelta(weeks=numero_semana),
+            'fin': lunes_actual + timedelta(weeks=numero_semana, days=4),
+        }
+        for numero_semana in range(4)
     ]
+    artistas = Artista.objects.order_by('nombre')
+    artista_id = request.GET.get('artista')
+    artista_seleccionado = artistas.filter(pk=artista_id).first()
+    if artista_seleccionado is None:
+        artista_seleccionado = artistas.first()
 
-    # Datos de prueba hasta que exista el modelo de reservas.
-    horas_ocupadas = {
-        (1, '09:00'), (4, '09:00'),
-        (2, '10:00'),
-        (0, '11:00'), (3, '11:00'),
-        (1, '12:00'),
-        (0, '13:00'), (1, '13:00'), (4, '13:00'),
-        (2, '14:00'),
-        (1, '15:00'), (3, '15:00'),
-        (2, '16:00'),
-        (3, '17:00'),
-    }
+    reservas = Reserva.objects.filter(
+        fecha__range=(dias[0]['fecha'], dias[-1]['fecha']),
+        estado__in=(
+            Reserva.Estado.PENDIENTE,
+            Reserva.Estado.CONFIRMADA,
+        ),
+    )
+    if artista_seleccionado is not None:
+        reservas = reservas.filter(artista=artista_seleccionado)
+
+    reservas_por_fecha = {}
+    for reserva in reservas:
+        reservas_por_fecha.setdefault(reserva.fecha, []).append(reserva)
+
     filas_calendario = []
     for hora in horas:
+        hora_fin = (datetime.combine(lunes, hora) + timedelta(hours=1)).time()
         celdas = []
-        for numero_dia, dia in enumerate(dias):
-            ocupado = (numero_dia, hora) in horas_ocupadas
+        for dia in dias:
+            ocupado = any(
+                reserva.hora_inicio < hora_fin and reserva.hora_fin > hora
+                for reserva in reservas_por_fecha.get(dia['fecha'], [])
+            )
             celdas.append({
                 'fecha': dia['fecha'],
                 'estado': 'Ocupado' if ocupado else 'Disponible',
@@ -52,6 +76,10 @@ def calendario_view(request):
     contexto = {
         'dias': dias,
         'filas_calendario': filas_calendario,
+        'artistas': artistas,
+        'artista_seleccionado': artista_seleccionado,
+        'semana_actual': semana_actual,
+        'semanas': semanas,
         'inicio_semana': dias[0]['fecha'],
         'fin_semana': dias[-1]['fecha'],
     }
