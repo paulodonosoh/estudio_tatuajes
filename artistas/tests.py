@@ -7,7 +7,7 @@ from .models import Artista
 class ArtistaViewsTests(TestCase):
 	def setUp(self):
 		self.artista = Artista.objects.create(
-			nombre='Noah',
+			nombre='Noah prueba',
 			estilos=['Japonés', 'Ilustrativo', 'Color'],
 			descripcion='Piezas con inspiración japonesa.',
 			contacto='noah@example.com',
@@ -19,7 +19,7 @@ class ArtistaViewsTests(TestCase):
 	def test_listado_usa_artistas_guardados(self):
 		response = self.client.get(reverse('artistas'))
 
-		self.assertContains(response, 'Noah')
+		self.assertContains(response, 'Noah prueba')
 		self.assertContains(response, reverse('detalle_artista', args=['noah-prueba']))
 
 	def test_detalle_muestra_datos_guardados(self):

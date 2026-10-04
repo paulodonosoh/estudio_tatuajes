@@ -25,6 +25,7 @@ urlpatterns = [
     path('reserva/', include('reserva.urls')),
     path('admin/', admin.site.urls),
     path('galeria/', include('galeria.urls')),
+    path('cotizar/', include('cotizador.urls')),
 ]
 
 if settings.DEBUG:

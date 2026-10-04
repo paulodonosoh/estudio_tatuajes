@@ -1,0 +1,22 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Cotizador de Tatuajes{% endblock %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 50px auto; text-align: center; font-family: sans-serif;">
+    <h2>Cotiza tu Tatuaje</h2>
+    <p>Ingresa el tamaño en cm² para estimar el valor:</p>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <input type="number" name="tamano" step="0.1" placeholder="Ej. 10.5" required style="padding: 10px; width: 60%;">
+        <button type="submit" style="padding: 10px 20px; background-color: #333; color: white; border: none; cursor: pointer;">Calcular Precio</button>
+    </form>
+
+    {% if precio_estimado %}
+        <h3 style="margin-top: 30px; color: #2e7d32;">
+            Precio Estimado: ${{ precio_estimado }}
+        </h3>
+    {% endif %}
+</div>
+{% endblock %}

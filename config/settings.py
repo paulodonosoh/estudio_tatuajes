@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'artistas',
     'reserva',
     'galeria',
+    'cotizador',
 ]
 
 MIDDLEWARE = [
