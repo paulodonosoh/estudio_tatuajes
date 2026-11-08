@@ -7,50 +7,209 @@ el objetivo final de este proyecto es que la aplicacion permita gestionar un est
 
 Este es mi proyecto de aplicación web desarrollada con Django para un estudio de tatuajes. Para esta entrega (Rúbrica 2), implementé un sistema de persistencia de datos y un CRUD completo que me permite administrar el portafolio de trabajos y bocetos desde la propia interfaz web.
 
-## 🚀 Características que implementé
+## Estudio de Tatuajes
 
-* **Base de Datos (PostgreSQL):** Conecté el proyecto a una base de datos relacional para dejar de usar datos estáticos.
-* **Seguridad:** Usé la librería `python-dotenv` para proteger mis credenciales locales mediante un archivo `.env` que no se sube a GitHub.
-* **CRUD Completo:** Creé las vistas, rutas y plantillas para poder Añadir, Leer, Editar y Eliminar tatuajes directamente desde el navegador.
-* **Filtro de Pestañas:** Agregué una columna booleana (`es_disponible`) en mi modelo para que la galería separe automáticamente los "Trabajos Realizados" de los "Diseños Disponibles" (bocetos).
-* **Validación de Formularios:** Configuré un `ModelForm` con validaciones propias para asegurar que los datos ingresados sean correctos.
-* **Git Flow:** Trabajé todo el desarrollo separando el proyecto por ramas (`feature/bd-y-modelos`, `feature/vistas-crud`, etc.) para mantener mi historial ordenado.
+Aplicacion web desarrollada con Django para gestionar un estudio de tatuajes con varios artistas. El proyecto permite administrar artistas, galeria de trabajos, cotizaciones y reservas mediante paginas HTML y Django Admin.
 
-## ⚙️ Cómo levantar mi proyecto localmente
+La API REST agrega una forma de consumir los mismos datos desde herramientas como Postman o Thunder Client, sin reemplazar la aplicacion web existente.
 
-Si necesitas probar mi proyecto, sigue estos pasos:
+## Funcionalidades
 
-1. **Clonar el repositorio e instalar dependencias:**
-   Clona mi repositorio, entra a la carpeta, crea tu entorno virtual e instala los requerimientos:
-   ```bash
-   pip install -r requirements.txt
+- Gestion de artistas y sus especialidades.
+- Galeria de trabajos realizados y diseños disponibles.
+- Cotizador de tatuajes.
+- CRUD web de reservas.
+- Calendario de disponibilidad por artista.
+- API REST de reservas.
+- Autenticacion JWT para operaciones de escritura en la API.
+- PostgreSQL configurado mediante variables de entorno.
 
-   Configurar la Base de Datos:
-Crea una base de datos vacía en tu pgAdmin llamada estudio_tatuajes_db. Luego, crea un archivo .env en la raíz de este proyecto con tus credenciales:
+## Requisitos
 
-Fragmento de código
-DB_NAME=estudio_tatuajes_db
-DB_USER=postgres
-DB_PASSWORD=tu_contraseña_aqui
-DB_HOST=localhost
-DB_PORT=5432
+- Python 3.13 o compatible.
+- PostgreSQL.
+- Git.
 
-2. **Ejecutar migraciones y levantar el servidor:**
+## Instalacion local
 
-Bash
-python manage.py migrate
-python manage.py runserver
-Mi proyecto estará corriendo en http://127.0.0.1:8000/.
+1. Clonar el repositorio y entrar en la carpeta del proyecto.
 
-## App Reserva - Funcionalidades implementadas
+2. Crear y activar el entorno virtual:
 
-La aplicación `reserva` ya cuenta con las siguientes funcionalidades:
+   ```powershell
+   python -m venv .venv
+   .venv\Scripts\activate
+   ```
 
-* **CRUD completo de reservas:** permite crear, listar, editar y eliminar reservas desde la interfaz web.
-* **Asociación con artistas:** cada reserva queda vinculada a un artista específico del estudio.
-* **Validación de horarios:** se controla que la hora de término sea mayor que la de inicio y se evita crear reservas inconsistentes.
-* **Calendario semanal:** muestra la disponibilidad por día y horario con base en las reservas registradas en la base de datos.
-* **Filtro por artista:** el calendario puede visualizarse por artista para consultar su disponibilidad individual.
-* **Estados de reserva:** las reservas pueden registrarse con estados como pendiente o confirmada.
-* **Navegación por semanas:** el calendario permite avanzar o retroceder por semanas futuras/pasadas para revisar disponibilidad.
-* **Formularios con validación:** el `ModelForm` valida los datos antes de guardar la reserva, asegurando integridad en la información.
+3. Instalar las dependencias:
+
+   ```powershell
+   python -m pip install -r requirements.txt
+   ```
+
+4. Crear una base de datos PostgreSQL, por ejemplo `estudio_tatuajes_db`.
+
+5. Copiar `.env.example` como `.env` y completar los valores locales:
+
+   ```env
+   SECRET_KEY=clave-local-de-desarrollo
+   DEBUG=True
+   DB_NAME=estudio_tatuajes_db
+   DB_USER=postgres
+   DB_PASSWORD=tu_clave_local
+   DB_HOST=localhost
+   DB_PORT=5432
+   ```
+
+   El archivo `.env` no debe publicarse ni contenerse en capturas del informe. Se debe conservar `.env.example` sin credenciales reales.
+
+6. Ejecutar las migraciones:
+
+   ```powershell
+   python manage.py migrate
+   ```
+
+7. Levantar el servidor:
+
+   ```powershell
+   python manage.py runserver
+   ```
+
+   El sitio queda disponible en `http://127.0.0.1:8000/`.
+
+## Aplicaciones Django
+
+- `core`: paginas principales del sitio.
+- `artistas`: gestion de tatuadores y sus datos.
+- `reserva`: reservas, calendario y API REST.
+- `galeria`: trabajos y diseños disponibles.
+- `cotizador`: calculadora de precios estimados.
+
+## API REST de reservas
+
+La API utiliza Django REST Framework y `djangorestframework-simplejwt`. El recurso principal es `Reserva`, que se conecta con el modelo existente `Artista`.
+
+### Autenticacion JWT
+
+Obtener tokens:
+
+```http
+POST /api/token/
+```
+
+Body JSON:
+
+```json
+{
+  "username": "api_demo",
+   "password": "TU_CONTRASENA_LOCAL"
+}
+```
+
+La respuesta contiene los tokens `access` y `refresh`. Para renovar el access token:
+
+```http
+POST /api/token/refresh/
+```
+
+Body JSON:
+
+```json
+{
+  "refresh": "tu_refresh_token"
+}
+```
+
+Las operaciones protegidas deben enviar el access token en el encabezado:
+
+```http
+Authorization: Bearer tu_access_token
+```
+
+El usuario `api_demo` es solo para pruebas locales. La contraseña debe configurarse localmente y no debe publicarse en el repositorio, capturas o informe.
+
+### Endpoints
+
+| Metodo | Ruta | Proteccion | Proposito |
+| --- | --- | --- | --- |
+| GET | `/api/reservas/` | Publica | Listar reservas |
+| GET | `/api/reservas/<id>/` | Publica | Consultar una reserva |
+| POST | `/api/reservas/` | JWT obligatorio | Crear una reserva |
+| PATCH | `/api/reservas/<id>/` | JWT obligatorio | Modificar parcialmente una reserva |
+| PUT | `/api/reservas/<id>/` | JWT obligatorio | Reemplazar una reserva |
+| DELETE | `/api/reservas/<id>/` | JWT obligatorio | Eliminar una reserva |
+
+### Crear una reserva
+
+```http
+POST /api/reservas/
+```
+
+Body de ejemplo:
+
+```json
+{
+  "nombre_cliente": "Cliente API",
+  "telefono": "56912345678",
+  "email": "cliente@example.com",
+  "artista": 1,
+  "fecha": "2026-11-10",
+  "hora_inicio": "10:00:00",
+  "hora_fin": "11:00:00",
+  "descripcion": "Reserva creada mediante la API"
+}
+```
+
+El campo `artista` debe corresponder al ID de un artista existente. El campo `estado` es opcional y utiliza `pendiente` por defecto.
+
+### Validaciones
+
+- Los campos obligatorios no pueden estar vacios.
+- La fecha no puede estar en el pasado.
+- `hora_fin` debe ser posterior a `hora_inicio`.
+- El artista debe existir.
+- `estado` solo acepta los valores definidos por el modelo.
+- `id`, `creado_en` y `actualizado_en` son campos de solo lectura.
+
+### Respuestas esperadas
+
+- `200 OK`: consulta o modificacion exitosa.
+- `201 Created`: reserva creada.
+- `204 No Content`: reserva eliminada.
+- `400 Bad Request`: datos invalidos.
+- `401 Unauthorized`: falta el token o esta expirado.
+- `404 Not Found`: la reserva no existe.
+
+## Pruebas
+
+La API fue probada con Django REST Framework y puede verificarse con Postman o Thunder Client en este orden:
+
+1. Obtener `access` y `refresh` en `/api/token/`.
+2. Renovar el access token en `/api/token/refresh/`.
+3. Ejecutar un `GET /api/reservas/` sin token.
+4. Crear una reserva con `POST` y Bearer token.
+5. Modificarla con `PATCH` y Bearer token.
+6. Consultarla mediante su identificador.
+7. Eliminarla con `DELETE` y Bearer token.
+8. Repetir un `POST` sin token y comprobar el `401`.
+9. Enviar una fecha pasada u horarios invalidos y comprobar el `400`.
+
+Para ejecutar las pruebas automatizadas:
+
+```powershell
+python manage.py test
+```
+
+Las pruebas incluyen autenticacion JWT, permisos, CRUD y validaciones de fecha y horario.
+
+## Seguridad y variables de entorno
+
+- No publicar `.env`.
+- No incluir contraseñas reales en el README, capturas o commits.
+- Mantener `.env.example` con valores de ejemplo.
+- Usar tokens de prueba solo durante el desarrollo.
+- Renovar el access token cuando expire; no enviar el refresh token a endpoints CRUD.
+
+## Continuidad del proyecto
+
+La API utiliza los modelos y la base de datos PostgreSQL del proyecto original. Las paginas HTML, Django Admin y las aplicaciones existentes siguen funcionando junto con los nuevos endpoints REST.
