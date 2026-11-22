@@ -1,4 +1,5 @@
 {% extends "core/base.html" %}
+{% load static %}
 
 {% block title %}Inicio | Estudio de tatuajes{% endblock %}
 
@@ -6,9 +7,60 @@
 	Conoce nuestro estudio de tatuajes y descubre nuestros trabajos.
 {% endblock %}
 
+{% block nav_home %}active{% endblock %}
+
 {% block content %}
-	<section>
-		<h1>Estudio de tatuajes</h1>
-		<p>Bienvenido a nuestro estudio.</p>
-	</section>
+<section class="hero">
+	<div class="hero-content">
+		<p class="eyebrow"><span></span> Tattoo studio · Arte y personalidad</p>
+		<h1>Tu piel,<br><em>nuestra inspiración.</em></h1>
+		<p class="hero-text">Creamos tatuajes únicos que cuentan historias, con técnica, cuidado y respeto por tu estilo.</p>
+		<div class="hero-actions">
+			<a class="button button-primary" href="{% url 'lista_tatuajes' %}">Ver trabajos</a>
+			<a class="button button-ghost" href="{% url 'calendario' %}">Reservar hora <span aria-hidden="true">→</span></a>
+		</div>
+		<div class="hero-details" aria-label="Ventajas del estudio">
+			<div><strong>3</strong><span>artistas</span></div>
+			<div><strong>100%</strong><span>personalizado</span></div>
+			<div><strong>Higiene</strong><span>profesional</span></div>
+		</div>
+	</div>
+
+	<div class="hero-art" aria-label="Trabajos destacados">
+		<div class="hero-frame hero-frame-main">
+			<img src="{% static 'galeria/images/dragon.jpeg' %}" alt="Tatuaje japonés de dragón">
+		</div>
+		<div class="hero-frame hero-frame-small">
+			<img src="{% static 'galeria/images/lobo.jpeg' %}" alt="Tatuaje geométrico de lobo">
+		</div>
+		<div class="ink-circle">INK<br><span>2026</span></div>
+	</div>
+</section>
+
+<section class="home-section">
+	<div class="section-heading">
+		<p class="eyebrow"><span></span> Explora el estudio</p>
+		<h2>Arte hecho a tu medida</h2>
+	</div>
+	<div class="feature-grid">
+		<a class="feature-card" href="{% url 'lista_tatuajes' %}">
+			<span class="feature-number">01</span>
+			<h3>Galería</h3>
+			<p>Conoce trabajos realizados y diseños disponibles.</p>
+			<span class="feature-link">Explorar →</span>
+		</a>
+		<a class="feature-card" href="{% url 'artistas' %}">
+			<span class="feature-number">02</span>
+			<h3>Artistas</h3>
+			<p>Encuentra el estilo y el tatuador perfecto para tu idea.</p>
+			<span class="feature-link">Conocerlos →</span>
+		</a>
+		<a class="feature-card" href="{% url 'cotizador' %}">
+			<span class="feature-number">03</span>
+			<h3>Cotizador</h3>
+			<p>Obtén una referencia de precio antes de tu reserva.</p>
+			<span class="feature-link">Calcular →</span>
+		</a>
+	</div>
+</section>
 {% endblock %}

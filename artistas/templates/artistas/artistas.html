@@ -1,9 +1,11 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>{% block title %}{{ artista.nombre }} | Estudio de tatuajes{% endblock %}</title>
+	<link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
 	<style>
 	.artista {
 		max-width: 960px;
@@ -65,9 +67,18 @@
 </head>
 <body>
 	<header>
-		<nav aria-label="Navegación de artistas">
-			<a href="{% url 'artistas' %}">Todos los artistas</a>
-			<a href="{% url 'home' %}">Inicio</a>
+		<nav class="main-nav" aria-label="Navegación principal">
+			<a class="brand" href="{% url 'home' %}">
+				<span class="brand-mark" aria-hidden="true">N</span>
+				<span class="brand-copy"><strong>Ink Studio</strong><small>Tattoo &amp; Art</small></span>
+			</a>
+			<div class="nav-menu is-open">
+				<a href="{% url 'home' %}">Inicio</a>
+				<a href="{% url 'calendario' %}">Reservas</a>
+				<a href="{% url 'lista_tatuajes' %}">Galería</a>
+				<a class="active" href="{% url 'artistas' %}">Artistas</a>
+				<a class="nav-action" href="{% url 'cotizador' %}">Cotizador</a>
+			</div>
 		</nav>
 	</header>
 

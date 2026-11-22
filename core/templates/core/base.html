@@ -12,28 +12,61 @@
     {% endblock %}
 </head>
 <body>
-    <header>
+    <header class="site-header">
         {% block header %}
-        <nav aria-label="Navegación principal">
-            <a href="{% url 'home' %}">Inicio</a>
-            <a href="{% url 'calendario' %}">reservas</a>
-            <a href="{% url 'lista_tatuajes' %}">Galería</a>
-            <a href="{% url 'artistas' %}">Artistas</a>
-            <a href="{% url 'cotizador' %}">Cotizador</a>
+        <nav class="main-nav" aria-label="Navegación principal">
+            <a class="brand" href="{% url 'home' %}" aria-label="Ir al inicio">
+                <span class="brand-mark" aria-hidden="true">N</span>
+                <span class="brand-copy">
+                    <strong>Ink Studio</strong>
+                    <small>Tattoo &amp; Art</small>
+                </span>
+            </a>
+
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-menu">
+                <span></span><span></span><span></span>
+                <span class="sr-only">Abrir menú</span>
+            </button>
+
+            <div class="nav-menu" id="main-menu">
+                <a href="{% url 'home' %}" class="{% block nav_home %}{% endblock %}">Inicio</a>
+                <a href="{% url 'calendario' %}" class="{% block nav_reservas %}{% endblock %}">Reservas</a>
+                <a href="{% url 'lista_tatuajes' %}" class="{% block nav_galeria %}{% endblock %}">Galería</a>
+                <a href="{% url 'artistas' %}" class="{% block nav_artistas %}{% endblock %}">Artistas</a>
+                <a class="nav-action {% block nav_cotizador %}{% endblock %}" href="{% url 'cotizador' %}">Cotizador</a>
+            </div>
         </nav>
         {% endblock %}
     </header>
 
-    <main>
+    <main class="site-main">
         {% block content %}{% endblock %}
     </main>
 
-    <footer>
+    <footer class="site-footer">
         {% block footer %}
-        <p>&copy; {% now "Y" %} Estudio de tatuajes</p>
+        <div class="footer-inner">
+            <div>
+                <strong>Ink Studio</strong>
+                <p>Tatuajes con intención. Arte que permanece.</p>
+            </div>
+            <p>&copy; {% now "Y" %} Ink Studio</p>
+        </div>
         {% endblock %}
     </footer>
 
-    {% block scripts %}{% endblock %}
+    {% block scripts %}
+    <script>
+        const navToggle = document.querySelector('.nav-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+
+        if (navToggle && navMenu) {
+            navToggle.addEventListener('click', () => {
+                const isOpen = navMenu.classList.toggle('is-open');
+                navToggle.setAttribute('aria-expanded', String(isOpen));
+            });
+        }
+    </script>
+    {% endblock %}
 </body>
 </html>
