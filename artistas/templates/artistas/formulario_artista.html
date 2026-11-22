@@ -1,15 +1,405 @@
 {% extends 'core/base.html' %}
 
-{% block title %}{{ accion }} artista | Estudio de tatuajes{% endblock %}
+{% block title %}{{ accion }} artista | Ink Studio{% endblock %}
+{% block nav_artistas %}active{% endblock %}
 
 {% block content %}
-<section style="max-width: 640px; margin: 2rem auto; padding: 0 1rem;">
-    <h1>{{ accion }} artista</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Guardar artista</button>
-        <a href="{% url 'artistas' %}">Cancelar</a>
-    </form>
+<section class="artist-editor" aria-labelledby="artist-editor-title">
+    <header class="artist-editor__heading">
+        <p class="artist-editor__eyebrow">El equipo Ink Studio</p>
+        <h1 id="artist-editor-title">{% if accion == 'Editar' %}Actualiza el perfil del artista{% else %}Presenta a un nuevo artista{% endif %}</h1>
+        <p>Comparte su estilo, experiencia y disponibilidad para que cada persona encuentre a su tatuador ideal.</p>
+    </header>
+
+    <div class="artist-editor__layout">
+        <div class="artist-editor__card">
+            <h2>Información del perfil</h2>
+            <form class="artist-editor__form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <ul class="artist-editor__errors" role="alert">
+                        {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+                    </ul>
+                {% endif %}
+
+                <div class="artist-editor__field">
+                    <label for="{{ form.nombre.id_for_label }}">Nombre del artista</label>
+                    {{ form.nombre }}
+                    {% if form.nombre.errors %}<ul class="artist-editor__field-errors">{% for error in form.nombre.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+
+                <div class="artist-editor__field">
+                    <label for="{{ form.estilos.id_for_label }}">Estilos de tatuaje</label>
+                    {{ form.estilos }}
+                    <small>Separa los estilos con comas.</small>
+                    {% if form.estilos.errors %}<ul class="artist-editor__field-errors">{% for error in form.estilos.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+
+                <div class="artist-editor__field artist-editor__field--wide">
+                    <label for="{{ form.descripcion.id_for_label }}">Descripción</label>
+                    {{ form.descripcion }}
+                    <small>Una breve presentación de su experiencia y su forma de trabajar.</small>
+                    {% if form.descripcion.errors %}<ul class="artist-editor__field-errors">{% for error in form.descripcion.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+
+                <div class="artist-editor__field">
+                    <label for="{{ form.contacto.id_for_label }}">Contacto</label>
+                    {{ form.contacto }}
+                    {% if form.contacto.errors %}<ul class="artist-editor__field-errors">{% for error in form.contacto.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+
+                <div class="artist-editor__field">
+                    <label for="{{ form.dias.id_for_label }}">Días disponibles</label>
+                    {{ form.dias }}
+                    {% if form.dias.errors %}<ul class="artist-editor__field-errors">{% for error in form.dias.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+
+                <div class="artist-editor__field">
+                    <label for="{{ form.horarios.id_for_label }}">Horarios</label>
+                    {{ form.horarios }}
+                    {% if form.horarios.errors %}<ul class="artist-editor__field-errors">{% for error in form.horarios.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+
+                <div class="artist-editor__field">
+                    <label for="{{ form.url.id_for_label }}">Enlace del perfil</label>
+                    {{ form.url }}
+                    <small>Usa un texto corto, por ejemplo: paulo-donoso.</small>
+                    {% if form.url.errors %}<ul class="artist-editor__field-errors">{% for error in form.url.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+
+                <div class="artist-editor__field artist-editor__field--wide">
+                    <label for="{{ form.imagen.id_for_label }}">Foto del artista</label>
+                    <div class="artist-editor__upload">
+                        {{ form.imagen }}
+                    </div>
+                    <small>Elige una imagen clara para mostrar en la galería de artistas.</small>
+                    {% if form.imagen.errors %}<ul class="artist-editor__field-errors">{% for error in form.imagen.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+
+                <div class="artist-editor__actions">
+                    <button type="submit">Guardar artista <span aria-hidden="true">→</span></button>
+                    <a href="{% url 'artistas' %}">Cancelar</a>
+                </div>
+            </form>
+        </div>
+
+        <aside class="artist-editor__preview" aria-label="Vista previa del artista">
+            <p class="artist-editor__eyebrow">Vista previa</p>
+            <div class="artist-editor__image-frame">
+                {% if form.instance.pk and form.instance.imagen %}
+                    <img id="artist-image-preview" src="{{ form.instance.imagen.url }}" alt="Foto de {{ form.instance.nombre }}">
+                    <p id="artist-image-placeholder" hidden>Selecciona una imagen para ver la vista previa.</p>
+                {% else %}
+                    <img id="artist-image-preview" src="" alt="" hidden>
+                    <p id="artist-image-placeholder">Selecciona una imagen para ver la vista previa.</p>
+                {% endif %}
+            </div>
+            <div class="artist-editor__preview-copy">
+                <h2>Un perfil que inspira.</h2>
+                <p>Una buena foto y una descripción cercana ayudan a conectar al artista con quienes buscan su próximo tatuaje.</p>
+            </div>
+        </aside>
+    </div>
 </section>
+
+<style>
+    .artist-editor {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 3rem 1.5rem 4rem;
+    }
+
+    .artist-editor__heading {
+        max-width: 760px;
+        margin-bottom: 2rem;
+    }
+
+    .artist-editor__eyebrow {
+        margin: 0 0 0.7rem;
+        color: #c65d38;
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+
+    .artist-editor__heading h1 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(2.3rem, 5vw, 3.8rem);
+        letter-spacing: -0.045em;
+    }
+
+    .artist-editor__heading > p:last-child {
+        max-width: 650px;
+        margin: 0.7rem 0 0;
+        color: #68645d;
+        line-height: 1.7;
+    }
+
+    .artist-editor__layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.45fr) minmax(250px, 0.8fr);
+        align-items: start;
+        gap: 1.5rem;
+    }
+
+    .artist-editor__card,
+    .artist-editor__preview {
+        overflow: hidden;
+        border: 1px solid rgba(23, 21, 18, 0.08);
+        border-radius: 10px;
+        box-shadow: 0 16px 42px rgba(23, 21, 18, 0.07);
+    }
+
+    .artist-editor__card {
+        padding: clamp(1.25rem, 3vw, 2.25rem);
+        background: #fffdf8;
+    }
+
+    .artist-editor__card h2 {
+        margin: 0 0 1.5rem;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 1.55rem;
+    }
+
+    .artist-editor__form {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.1rem 1rem;
+    }
+
+    .artist-editor__field {
+        min-width: 0;
+    }
+
+    .artist-editor__field--wide {
+        grid-column: 1 / -1;
+    }
+
+    .artist-editor__field label {
+        display: block;
+        margin-bottom: 0.45rem;
+        color: #34312c;
+        font-size: 0.85rem;
+        font-weight: 700;
+    }
+
+    .artist-editor__field input:not([type="file"]),
+    .artist-editor__field textarea {
+        width: 100%;
+        min-height: 46px;
+        padding: 0.7rem 0.8rem;
+        border: 1px solid #d9d3c8;
+        border-radius: 5px;
+        background: #fff;
+        color: #171512;
+        font: inherit;
+        font-size: 0.94rem;
+        transition: border-color 150ms ease, box-shadow 150ms ease;
+    }
+
+    .artist-editor__field textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .artist-editor__field input:focus,
+    .artist-editor__field textarea:focus {
+        border-color: #c65d38;
+        outline: 0;
+        box-shadow: 0 0 0 3px rgba(198, 93, 56, 0.13);
+    }
+
+    .artist-editor__field > small {
+        display: block;
+        margin-top: 0.45rem;
+        color: #817d74;
+        font-size: 0.78rem;
+        line-height: 1.5;
+    }
+
+    .artist-editor__upload {
+        padding: 0.75rem;
+        border: 1px dashed #c9c1b4;
+        border-radius: 6px;
+        background: #f8f5ef;
+    }
+
+    .artist-editor__upload input[type="file"] {
+        max-width: 100%;
+        color: #68645d;
+        font: inherit;
+        font-size: 0.83rem;
+    }
+
+    .artist-editor__upload input[type="file"]::file-selector-button {
+        margin-right: 0.7rem;
+        padding: 0.55rem 0.8rem;
+        border: 0;
+        border-radius: 4px;
+        background: #24211d;
+        color: #fffdf8;
+        cursor: pointer;
+        font: inherit;
+        font-weight: 700;
+    }
+
+    .artist-editor__errors,
+    .artist-editor__field-errors {
+        margin: 0.4rem 0 0;
+        padding: 0;
+        color: #a43e2d;
+        font-size: 0.82rem;
+        list-style: none;
+    }
+
+    .artist-editor__errors {
+        grid-column: 1 / -1;
+        padding: 0.8rem 1rem;
+        border: 1px solid #e8c1b6;
+        border-radius: 5px;
+        background: #fff5f1;
+    }
+
+    .artist-editor__actions {
+        grid-column: 1 / -1;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 0.4rem;
+    }
+
+    .artist-editor__actions button {
+        min-height: 48px;
+        padding: 0.75rem 1.25rem;
+        border: 0;
+        border-radius: 4px;
+        background: #171512;
+        box-shadow: 5px 5px 0 #c65d38;
+        color: #fffdf8;
+        cursor: pointer;
+        font: inherit;
+        font-size: 0.88rem;
+        font-weight: 800;
+        transition: background 150ms ease, transform 150ms ease;
+    }
+
+    .artist-editor__actions button:hover {
+        background: #c65d38;
+        transform: translate(2px, 2px);
+    }
+
+    .artist-editor__actions a {
+        color: #68645d;
+        font-size: 0.86rem;
+        font-weight: 700;
+        text-decoration-color: #c65d38;
+        text-underline-offset: 3px;
+    }
+
+    .artist-editor__preview {
+        padding: 1rem;
+        background: #24211d;
+        color: #fffdf8;
+    }
+
+    .artist-editor__image-frame {
+        overflow: hidden;
+        min-height: 260px;
+        display: grid;
+        place-items: center;
+        border-radius: 6px;
+        background: #171512;
+        color: #bcb6ab;
+        text-align: center;
+    }
+
+    .artist-editor__image-frame img {
+        width: 100%;
+        max-height: 440px;
+        display: block;
+        object-fit: cover;
+    }
+
+    .artist-editor__image-frame p {
+        max-width: 230px;
+        padding: 1rem;
+        font-size: 0.86rem;
+        line-height: 1.6;
+    }
+
+    .artist-editor__preview-copy {
+        padding: 1.25rem 0.25rem 0.4rem;
+    }
+
+    .artist-editor__preview-copy h2 {
+        margin: 0 0 0.55rem;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 1.5rem;
+    }
+
+    .artist-editor__preview-copy p {
+        margin: 0;
+        color: #c4beb3;
+        font-size: 0.86rem;
+        line-height: 1.65;
+    }
+
+    @media (max-width: 780px) {
+        .artist-editor__layout {
+            grid-template-columns: 1fr;
+        }
+
+        .artist-editor__image-frame {
+            min-height: 200px;
+            max-height: 360px;
+        }
+    }
+
+    @media (max-width: 560px) {
+        .artist-editor {
+            padding: 2rem 1rem 3rem;
+        }
+
+        .artist-editor__form {
+            grid-template-columns: 1fr;
+        }
+
+        .artist-editor__field--wide,
+        .artist-editor__actions,
+        .artist-editor__errors {
+            grid-column: auto;
+        }
+    }
+</style>
+
+<script>
+    const artistImageInput = document.getElementById('{{ form.imagen.id_for_label }}');
+    const artistImagePreview = document.getElementById('artist-image-preview');
+    const artistImagePlaceholder = document.getElementById('artist-image-placeholder');
+
+    if (artistImageInput && artistImagePreview && artistImagePlaceholder) {
+        artistImageInput.addEventListener('change', () => {
+            const file = artistImageInput.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.addEventListener('load', () => {
+                artistImagePreview.src = reader.result;
+                artistImagePreview.alt = `Vista previa de ${file.name}`;
+                artistImagePreview.hidden = false;
+                artistImagePlaceholder.hidden = true;
+            });
+            reader.addEventListener('error', () => {
+                artistImagePreview.hidden = true;
+                artistImagePlaceholder.textContent = 'No se pudo leer la imagen seleccionada.';
+                artistImagePlaceholder.hidden = false;
+            });
+            reader.readAsDataURL(file);
+        });
+    }
+</script>
 {% endblock %}
