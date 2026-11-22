@@ -1,27 +1,382 @@
 {% extends "reserva/base.html" %}
+{% load static %}
 
-{% block title %}Formulario de reserva | Estudio de tatuajes{% endblock %}
+{% block title %}Solicitar una reserva | Ink Studio{% endblock %}
+{% block description %}Cuéntanos sobre tu idea y solicita una cita en Ink Studio.{% endblock %}
+
+{% block styles %}
+{{ block.super }}
+<style>
+	.reservation-page {
+		max-width: 1180px;
+		margin: 0 auto;
+		padding: 3rem 1.5rem 4rem;
+	}
+
+	.reservation-heading {
+		max-width: 680px;
+		margin-bottom: 2rem;
+	}
+
+	.reservation-eyebrow {
+		margin: 0 0 0.7rem;
+		color: #c65d38;
+		font-size: 0.72rem;
+		font-weight: 800;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+	}
+
+	.reservation-heading h1 {
+		margin: 0;
+		font-family: Georgia, "Times New Roman", serif;
+		font-size: clamp(2.4rem, 5vw, 4rem);
+		letter-spacing: -0.045em;
+	}
+
+	.reservation-heading > p:last-child {
+		max-width: 570px;
+		margin: 0.8rem 0 0;
+		color: #68645d;
+		font-size: 1.05rem;
+		line-height: 1.7;
+	}
+
+	.reservation-layout {
+		display: grid;
+		grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.8fr);
+		align-items: start;
+		gap: 1.5rem;
+	}
+
+	.reservation-card {
+		padding: clamp(1.25rem, 3vw, 2.25rem);
+		border: 1px solid rgba(23, 21, 18, 0.08);
+		border-radius: 10px;
+		background: #fffdf8;
+		box-shadow: 0 16px 42px rgba(23, 21, 18, 0.07);
+	}
+
+	.reservation-card h2 {
+		margin: 0 0 1.5rem;
+		font-family: Georgia, "Times New Roman", serif;
+		font-size: 1.55rem;
+	}
+
+	.reservation-form {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1.15rem 1rem;
+	}
+
+	.reservation-field {
+		min-width: 0;
+	}
+
+	.reservation-field--wide {
+		grid-column: 1 / -1;
+	}
+
+	.reservation-field label {
+		display: block;
+		margin-bottom: 0.45rem;
+		color: #34312c;
+		font-size: 0.85rem;
+		font-weight: 700;
+	}
+
+	.reservation-field input,
+	.reservation-field select,
+	.reservation-field textarea {
+		width: 100%;
+		min-height: 46px;
+		padding: 0.7rem 0.8rem;
+		border: 1px solid #d9d3c8;
+		border-radius: 5px;
+		background: #fff;
+		color: #171512;
+		font: inherit;
+		font-size: 0.94rem;
+		transition: border-color 150ms ease, box-shadow 150ms ease;
+	}
+
+	.reservation-field textarea {
+		min-height: 120px;
+		resize: vertical;
+	}
+
+	.reservation-field input:focus,
+	.reservation-field select:focus,
+	.reservation-field textarea:focus {
+		border-color: #c65d38;
+		outline: 0;
+		box-shadow: 0 0 0 3px rgba(198, 93, 56, 0.13);
+	}
+
+	.reservation-field input::placeholder,
+	.reservation-field textarea::placeholder {
+		color: #a7a196;
+	}
+
+	.reservation-errors,
+	.reservation-field-errors {
+		margin: 0.4rem 0 0;
+		padding: 0;
+		color: #a43e2d;
+		font-size: 0.82rem;
+		list-style: none;
+	}
+
+	.reservation-errors {
+		grid-column: 1 / -1;
+		margin-bottom: 1rem;
+		padding: 0.8rem 1rem;
+		border: 1px solid #e8c1b6;
+		border-radius: 5px;
+		background: #fff5f1;
+	}
+
+	.reservation-notice {
+		margin: 0 0 1rem;
+		padding: 0.8rem 1rem;
+		border: 1px solid #c9dfce;
+		border-radius: 5px;
+		background: #f1f8f2;
+		color: #315d3b;
+	}
+
+	.reservation-submit {
+		grid-column: 1 / -1;
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 1rem;
+		margin-top: 0.3rem;
+	}
+
+	.reservation-submit button {
+		min-height: 50px;
+		padding: 0.8rem 1.3rem;
+		border: 0;
+		border-radius: 4px;
+		background: #171512;
+		box-shadow: 5px 5px 0 #c65d38;
+		color: #fffdf8;
+		cursor: pointer;
+		font: inherit;
+		font-size: 0.9rem;
+		font-weight: 800;
+		transition: background 150ms ease, transform 150ms ease;
+	}
+
+	.reservation-submit button:hover {
+		background: #c65d38;
+		transform: translate(2px, 2px);
+	}
+
+	.reservation-submit a {
+		color: #68645d;
+		font-size: 0.86rem;
+		font-weight: 700;
+		text-decoration-color: #c65d38;
+		text-underline-offset: 3px;
+	}
+
+	.reservation-aside {
+		overflow: hidden;
+		border-radius: 10px;
+		background: #24211d;
+		color: #fffdf8;
+		box-shadow: 0 16px 42px rgba(23, 21, 18, 0.1);
+	}
+
+	.reservation-aside__image {
+		width: 100%;
+		height: 220px;
+		display: block;
+		object-fit: cover;
+		object-position: center 38%;
+	}
+
+	.reservation-aside__content {
+		padding: 1.5rem;
+	}
+
+	.reservation-aside__content .reservation-eyebrow {
+		color: #e58b68;
+	}
+
+	.reservation-aside__content h2 {
+		margin: 0 0 0.8rem;
+		font-family: Georgia, "Times New Roman", serif;
+		font-size: 1.65rem;
+		line-height: 1.2;
+	}
+
+	.reservation-aside__content > p:not(.reservation-eyebrow) {
+		color: #c4beb3;
+		font-size: 0.9rem;
+		line-height: 1.7;
+	}
+
+	.reservation-tips {
+		margin: 1.25rem 0 0;
+		padding: 1.1rem 0 0;
+		border-top: 1px solid rgba(255, 255, 255, 0.14);
+		list-style: none;
+	}
+
+	.reservation-tips li {
+		display: flex;
+		gap: 0.65rem;
+		margin: 0.7rem 0;
+		color: #e6e0d6;
+		font-size: 0.83rem;
+		line-height: 1.5;
+	}
+
+	.reservation-tips li::before {
+		color: #e58b68;
+		content: "✦";
+	}
+
+	@media (max-width: 800px) {
+		.reservation-layout {
+			grid-template-columns: 1fr;
+		}
+
+		.reservation-aside {
+			display: grid;
+			grid-template-columns: minmax(180px, 0.75fr) 1fr;
+		}
+
+		.reservation-aside__image {
+			height: 100%;
+			min-height: 250px;
+		}
+	}
+
+	@media (max-width: 560px) {
+		.reservation-page {
+			padding: 2rem 1rem 3rem;
+		}
+
+		.reservation-form {
+			grid-template-columns: 1fr;
+		}
+
+		.reservation-field--wide,
+		.reservation-submit {
+			grid-column: auto;
+		}
+
+		.reservation-aside {
+			grid-template-columns: 1fr;
+		}
+
+		.reservation-aside__image {
+			height: 190px;
+			min-height: 0;
+		}
+	}
+</style>
+{% endblock %}
 
 {% block content %}
-<section aria-labelledby="reservation-title">
-    <h1 id="reservation-title">Reserva tu hora</h1>
-    <p>Completa tus datos para solicitar una cita en el estudio.</p>
+<section class="reservation-page" aria-labelledby="reservation-title">
+	<header class="reservation-heading">
+		<p class="reservation-eyebrow">Agenda del estudio</p>
+		<h1 id="reservation-title">Hagamos espacio para tu idea.</h1>
+		<p>Cuéntanos lo esencial y coordinaremos contigo los detalles de tu próximo tatuaje.</p>
+	</header>
 
-    {% if messages %}
-        {% for message in messages %}
-            <p role="status">{{ message }}</p>
-        {% endfor %}
-    {% endif %}
+	<div class="reservation-layout">
+		<div class="reservation-card">
+			<h2>Solicitar una hora</h2>
 
-    <form method="post" action="{% url 'formulario_reserva' %}">
-        {% csrf_token %}
+			{% if messages %}
+				{% for message in messages %}
+					<p class="reservation-notice" role="status">{{ message }}</p>
+				{% endfor %}
+			{% endif %}
 
-        {{ form.non_field_errors }}
-        {{ form.as_p }}
+			<form class="reservation-form" method="post" action="{% url 'formulario_reserva' %}">
+				{% csrf_token %}
 
-        <button type="submit">Solicitar reserva</button>
-    </form>
+				{% if form.non_field_errors %}
+					<ul class="reservation-errors" role="alert">
+						{% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+					</ul>
+				{% endif %}
 
-    <p><a href="{% url 'lista_reservas' %}">Ver reservas registradas</a></p>
+				<div class="reservation-field">
+					<label for="{{ form.nombre_cliente.id_for_label }}">Nombre completo</label>
+					{{ form.nombre_cliente }}
+					{% if form.nombre_cliente.errors %}<ul class="reservation-field-errors">{% for error in form.nombre_cliente.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+				</div>
+
+				<div class="reservation-field">
+					<label for="{{ form.telefono.id_for_label }}">Teléfono</label>
+					{{ form.telefono }}
+					{% if form.telefono.errors %}<ul class="reservation-field-errors">{% for error in form.telefono.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+				</div>
+
+				<div class="reservation-field">
+					<label for="{{ form.email.id_for_label }}">Correo electrónico <span>(opcional)</span></label>
+					{{ form.email }}
+					{% if form.email.errors %}<ul class="reservation-field-errors">{% for error in form.email.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+				</div>
+
+				<div class="reservation-field">
+					<label for="{{ form.artista.id_for_label }}">Artista</label>
+					{{ form.artista }}
+					{% if form.artista.errors %}<ul class="reservation-field-errors">{% for error in form.artista.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+				</div>
+
+				<div class="reservation-field">
+					<label for="{{ form.fecha.id_for_label }}">Fecha preferida</label>
+					{{ form.fecha }}
+					{% if form.fecha.errors %}<ul class="reservation-field-errors">{% for error in form.fecha.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+				</div>
+
+				<div class="reservation-field">
+					<label for="{{ form.hora_inicio.id_for_label }}">Hora de inicio</label>
+					{{ form.hora_inicio }}
+					{% if form.hora_inicio.errors %}<ul class="reservation-field-errors">{% for error in form.hora_inicio.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+				</div>
+
+				<div class="reservation-field">
+					<label for="{{ form.hora_fin.id_for_label }}">Hora de término</label>
+					{{ form.hora_fin }}
+					{% if form.hora_fin.errors %}<ul class="reservation-field-errors">{% for error in form.hora_fin.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+				</div>
+
+				<div class="reservation-field reservation-field--wide">
+					<label for="{{ form.descripcion.id_for_label }}">Cuéntanos sobre tu idea <span>(opcional)</span></label>
+					{{ form.descripcion }}
+					{% if form.descripcion.errors %}<ul class="reservation-field-errors">{% for error in form.descripcion.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+				</div>
+
+				<div class="reservation-submit">
+					<button type="submit">Enviar solicitud <span aria-hidden="true">→</span></button>
+					<a href="{% url 'lista_reservas' %}">Ver reservas registradas</a>
+				</div>
+			</form>
+		</div>
+
+		<aside class="reservation-aside" aria-label="Información para reservar">
+			<img class="reservation-aside__image" src="{% static 'galeria/images/boceto3.jpeg' %}" alt="Diseños de tatuajes japoneses">
+			<div class="reservation-aside__content">
+				<p class="reservation-eyebrow">Tu próximo tatuaje</p>
+				<h2>Una buena idea merece su espacio.</h2>
+				<p>Esta solicitud nos ayuda a conocer tu disponibilidad. El equipo confirmará contigo el horario y los detalles del diseño.</p>
+				<ul class="reservation-tips">
+					<li>Elige al artista que mejor conecte con tu estilo.</li>
+					<li>Describe brevemente tu idea o zona del cuerpo.</li>
+					<li>La hora queda sujeta a confirmación del estudio.</li>
+				</ul>
+			</div>
+		</aside>
+	</div>
 </section>
 {% endblock %}

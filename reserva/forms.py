@@ -5,6 +5,10 @@ from .models import Reserva
 
 
 class ReservaForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['artista'].empty_label = 'Selecciona un artista'
+
     class Meta:
         model = Reserva
         fields = (
